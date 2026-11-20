@@ -1,3 +1,4 @@
+import { Explain } from '../core/explain';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -43,13 +44,13 @@ interface AreaMark {
 @Component({
   selector: 'app-prep',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, RevealDirective],
+  imports: [Explain, Icon, RevealDirective],
   host: { '(window:resize)': 'measure()' },
   template: `
     <section id="prep" class="section">
       <div class="container">
         <div class="section-head" appReveal>
-          <p class="eyebrow">Study notes</p>
+          <p class="eyebrow">Study notes<app-explain section="prep" /></p>
           <h2 class="title">The <span class="gradient-text">chapter wall</span></h2>
           <p class="lead">All {{ cards.length }} chapters of my two interview-prep guides on one curved wall. Drag or swipe along it, jump to an area, or search — every card opens its chapter.</p>
         </div>

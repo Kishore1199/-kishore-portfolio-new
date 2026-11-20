@@ -1,3 +1,4 @@
+import { Explain } from '../core/explain';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -83,12 +84,12 @@ const nearestAngle = (current: number, target: number) =>
 @Component({
   selector: 'app-skills',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RevealDirective, SkillIcon],
+  imports: [Explain, RevealDirective, SkillIcon],
   template: `
     <section id="skills" class="section">
       <div class="container">
         <div class="section-head center" appReveal>
-          <p class="eyebrow">Technical expertise</p>
+          <p class="eyebrow">Technical expertise<app-explain section="skills" /></p>
           <h2 class="title">Skills &amp; <span class="gradient-text">technologies</span></h2>
           <p class="lead">{{ categories.length }} categories · {{ tags.length }}+ technologies. Drag the globe to spin it, or pick a category.</p>
         </div>

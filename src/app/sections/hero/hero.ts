@@ -1,3 +1,4 @@
+import { AssistantService } from '../../core/assistant.service';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { HeroScene } from './hero-scene';
 import { Icon } from '../../core/icon';
@@ -12,6 +13,7 @@ import { PROFILE, STATS } from '../../data/portfolio.data';
   styleUrl: './hero.scss',
 })
 export class Hero implements OnInit, OnDestroy {
+  protected readonly assistant = inject(AssistantService);
   protected readonly theme = inject(ThemeService);
   protected readonly profile = PROFILE;
   protected readonly stats = STATS;

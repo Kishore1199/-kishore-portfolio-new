@@ -357,3 +357,13 @@ button { font: inherit; color: inherit; }
 :root[data-theme='light'] .logo img {
   filter: hue-rotate(215deg) saturate(1.15);
 }
+
+/* ALPHA: section currently being narrated */
+section.assistant-focus { position: relative; }
+section.assistant-focus::after {
+  content: ''; position: absolute; inset: 12px; border-radius: 32px; pointer-events: none; z-index: 0;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 60px -20px var(--accent);
+  animation: assistant-focus 1.6s ease-in-out infinite alternate;
+}
+@keyframes assistant-focus { from { opacity: 0.45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { section.assistant-focus::after { animation: none; } }

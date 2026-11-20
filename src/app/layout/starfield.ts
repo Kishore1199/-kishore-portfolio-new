@@ -51,7 +51,7 @@ const rng = (seed: number) => () => {
     /* idle: stars rest dim. While the page scrolls they flare up, then ease back down shortly after scrolling stops. */
     :host { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; contain: strict;
       opacity: 0.32; transition: opacity 0.9s ease; will-change: opacity; }
-    :host(.scrolling) { opacity: 1; transition: opacity 0.18s ease-out; }
+    :host(.scrolling), :host(.speaking) { opacity: 1; transition: opacity 0.18s ease-out; }
     /* each layer is a square larger than the viewport diagonal, centred, so it can rotate without exposing edges */
     .par { position: absolute; left: 50%; top: 50%; width: 160vmax; height: 160vmax; margin: -80vmax 0 0 -80vmax; will-change: transform; }
     .sky {

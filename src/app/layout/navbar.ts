@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, inject, output, signal } from '@angular/core';
 import { Icon } from '../core/icon';
+import { AssistantService } from '../core/assistant.service';
 import { ThemeService } from '../core/theme.service';
 import { ScrollService } from '../core/scroll.service';
 import { NAV_LINKS } from '../data/portfolio.data';
@@ -32,6 +33,15 @@ import { NAV_LINKS } from '../data/portfolio.data';
         </ul>
 
         <div class="actions">
+          @if (assistant.voice.canListen) {
+            <button class="icon-btn" [class.wake]="assistant.voice.wakeOn()" type="button" (click)="assistant.toggleWake()" [attr.aria-pressed]="assistant.voice.wakeOn()"
+                    [attr.aria-label]="assistant.voice.wakeOn() ? 'Turn off the Alpha wake word' : 'Turn on the Alpha wake word'" [title]="assistant.voice.wakeOn() ? 'Listening for “Alpha”' : 'Say “Alpha” to wake the assistant'">
+              <app-icon name="mic" [size]="16" />
+            </button>
+          }
+          <button class="icon-btn" type="button" (click)="assistant.voice.toggle()" [attr.aria-label]="assistant.voice.enabled() ? 'Mute ALPHA' : 'Unmute ALPHA'">
+            <app-icon [name]="assistant.voice.enabled() ? 'volume' : 'volume-x'" [size]="16" />
+          </button>
           <button class="icon-btn" type="button" (click)="theme.toggle()"
                   [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'">
             <app-icon [name]="theme.isDark() ? 'sun' : 'moon'" [size]="17" />
@@ -64,6 +74,7 @@ import { NAV_LINKS } from '../data/portfolio.data';
   styleUrl: './navbar.scss',
 })
 export class Navbar {
+  protected readonly assistant = inject(AssistantService);
   protected readonly theme = inject(ThemeService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly scroll = inject(ScrollService);

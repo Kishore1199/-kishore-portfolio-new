@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { Explain } from '../core/explain';
 import { Icon } from '../core/icon';
 import { RevealDirective } from '../core/reveal.directive';
 import { SkillIcon } from '../core/skill-icon';
@@ -9,12 +10,12 @@ import { baseSkillName, skillColor } from '../core/skill-meta';
 @Component({
   selector: 'app-experience',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, RevealDirective, SkillIcon, TiltDirective],
+  imports: [Explain, Icon, RevealDirective, SkillIcon, TiltDirective],
   template: `
     <section id="experience" class="section">
       <div class="container">
         <div class="section-head" appReveal>
-          <p class="eyebrow">Career</p>
+          <p class="eyebrow">Career<app-explain section="experience" /></p>
           <h2 class="title">Work <span class="gradient-text">experience</span></h2>
           <p class="lead">Pick a role to see what I built, the stack I used and the projects I shipped.</p>
         </div>

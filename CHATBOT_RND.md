@@ -1,7 +1,7 @@
 # R&D — Adding a Chatbot + Speaking Bot to the 3D Portfolio
 
 > How to bring **ALPHA** (the talking robot assistant from [Kishore.OS](https://github.com/Kishore1199/kishore-os)) into this 3D scrolling portfolio.
-> Status: **design & implementation plan** — reuses proven code from Kishore.OS, adapted to a single-page scroll layout.
+> Status: **implemented** (Nov 2026) — ALPHA is live on <https://kishore-new.web.app>, reusing proven code from Kishore.OS adapted to a single-page scroll layout.
 
 ---
 

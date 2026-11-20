@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Explain } from '../core/explain';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Icon } from '../core/icon';
 import { RevealDirective } from '../core/reveal.directive';
@@ -10,13 +11,13 @@ type FieldName = 'name' | 'email' | 'subject' | 'message';
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, Icon, RevealDirective, TiltDirective],
+  imports: [Explain, ReactiveFormsModule, Icon, RevealDirective, TiltDirective],
   template: `
     <section id="contact" class="section">
       <div class="container">
         <div class="layout">
           <div class="info" appReveal>
-            <p class="eyebrow">Contact</p>
+            <p class="eyebrow">Contact<app-explain section="contact" /></p>
             <h2 class="title">Let's build something <span class="gradient-text">great together</span>.</h2>
             <p class="lead">
               I'm open to new opportunities, freelance projects and interesting collaborations.

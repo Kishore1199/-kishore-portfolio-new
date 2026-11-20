@@ -11,11 +11,12 @@ import { Experience } from './sections/experience';
 import { Education } from './sections/education';
 import { Contact } from './sections/contact';
 import { Prep } from './sections/prep';
+import { Assistant } from './layout/assistant';
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Navbar, Footer, ResumeModal, Starfield, Hero, About, Skills, Projects, Experience, Education, Prep, Contact],
+  imports: [Navbar, Footer, ResumeModal, Starfield, Hero, About, Skills, Projects, Experience, Education, Prep, Contact, Assistant],
   template: `
     <div class="ambient" aria-hidden="true"></div>
     <app-starfield />
@@ -35,6 +36,7 @@ import { Prep } from './sections/prep';
     </main>
 
     <app-footer />
+    <app-assistant />
 
     @if (resumeOpen()) {
       <app-resume-modal (close)="resumeOpen.set(false)" />

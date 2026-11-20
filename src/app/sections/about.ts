@@ -1,3 +1,4 @@
+import { Explain } from '../core/explain';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -27,7 +28,7 @@ const TOTAL_SKILLS = SKILL_CATEGORIES.reduce((n, c) => n + c.skills.length, 0);
 @Component({
   selector: 'app-about',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, RevealDirective, SkillIcon, TiltDirective],
+  imports: [Explain, Icon, RevealDirective, SkillIcon, TiltDirective],
   template: `
     <section id="about" class="section">
       <div class="container layout">
@@ -96,7 +97,7 @@ const TOTAL_SKILLS = SKILL_CATEGORIES.reduce((n, c) => n + c.skills.length, 0);
 
         <!-- ============ editorial column ============ -->
         <div class="story" appReveal [revealDelay]="120">
-          <p class="eyebrow">About me</p>
+          <p class="eyebrow">About me<app-explain section="about" /></p>
           <h2 class="title">Building software that <span class="gradient-text">just works</span>.</h2>
           <p class="lead">
             I'm a Java Full Stack Developer at <strong>{{ profile.company }}</strong> with 3 years of experience —

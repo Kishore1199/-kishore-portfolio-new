@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { Explain } from '../core/explain';
 import { Icon } from '../core/icon';
 import { RevealDirective } from '../core/reveal.directive';
 import { SkillIcon } from '../core/skill-icon';
@@ -12,13 +13,13 @@ import { PROJECTS, Project } from '../data/portfolio.data';
 @Component({
   selector: 'app-projects',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, RevealDirective, SkillIcon],
+  imports: [Explain, Icon, RevealDirective, SkillIcon],
   template: `
     <section id="projects" class="section">
       <div class="container">
         <div class="head" appReveal>
           <div class="section-head">
-            <p class="eyebrow">Selected work</p>
+            <p class="eyebrow">Selected work<app-explain section="projects" /></p>
             <h2 class="title">Featured <span class="gradient-text">projects</span></h2>
             <p class="lead">Production healthcare software, company websites and full-stack internship builds.</p>
           </div>

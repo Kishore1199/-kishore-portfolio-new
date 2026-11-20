@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Explain } from '../core/explain';
 import { Icon } from '../core/icon';
 import { RevealDirective } from '../core/reveal.directive';
 import { TiltDirective } from '../core/tilt.directive';
@@ -10,12 +11,12 @@ const RING = 2 * Math.PI * 30;
 @Component({
   selector: 'app-education',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, RevealDirective, TiltDirective],
+  imports: [Explain, Icon, RevealDirective, TiltDirective],
   template: `
     <section id="education" class="section">
       <div class="container">
         <div class="section-head" appReveal>
-          <p class="eyebrow">Academic background</p>
+          <p class="eyebrow">Academic background<app-explain section="education" /></p>
           <h2 class="title">My learning <span class="gradient-text">journey</span></h2>
           <p class="lead">From school to engineering — the foundation behind my move into software.</p>
         </div>
