@@ -27,7 +27,7 @@ npm start        # http://localhost:4200
 npm run build    # production build in dist/portfolio-3d/browser
 ```
 
-Live: <https://kishore-3d.web.app> — every push to `main` deploys automatically (GitHub Actions → Firebase Hosting).
+Live: <https://kishore-new.web.app> — every push to `main` deploys automatically (GitHub Actions → Firebase Hosting).
 
 ## Related
 

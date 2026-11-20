@@ -198,7 +198,7 @@ Drop `<app-explain section="skills" />` next to each section title (`about.ts`, 
 ### Step 8 — Real AI answers (optional)
 Reuse the Firebase setup from Kishore.OS (same project **`kishore-os`**):
 1. Copy `cloud.service.ts` + `firebase.config.ts` (Firebase web config is public by design).
-2. Add this site's domain (e.g. `kishore-3d.web.app`) to the **reCAPTCHA Enterprise** key's allowed domains.
+2. Add this site's domain (e.g. `kishore-new.web.app`) to the **reCAPTCHA Enterprise** key's allowed domains.
 3. App Check debug token for localhost (`firebase appcheck:debugtokens:create …`).
 4. Keep the **20 s timeout** and offline fallback — the free Gemini tier can be busy.
 
@@ -288,4 +288,4 @@ sequenceDiagram
 1. Create the GitHub repo for this project and push.
 2. Implement steps 1–6 (core assistant) behind a feature flag.
 3. Add 3D reactions (step 7) and Gemini (step 8).
-4. Deploy to Firebase Hosting (e.g. `kishore-3d.web.app`) with GitHub Actions auto-deploy.
+4. Deploy to Firebase Hosting (e.g. `kishore-new.web.app`) with GitHub Actions auto-deploy.

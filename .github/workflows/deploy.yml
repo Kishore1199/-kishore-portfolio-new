@@ -1,4 +1,4 @@
-# Every push to main: build and publish to https://kishore-3d.web.app
+# Every push to main: build and publish to https://kishore-new.web.app
 name: Deploy to Firebase Hosting
 
 on:

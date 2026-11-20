@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "kishore-3d",
+    "site": "kishore-new",
     "public": "dist/portfolio-3d/browser",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [{ "source": "**", "destination": "/index.html" }],
