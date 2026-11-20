@@ -31,6 +31,7 @@ npm run build    # production build in dist/portfolio-3d/browser
 
 - **Kishore.OS** — portfolio as a browser OS with the ALPHA voice guide: <https://github.com/Kishore1199/kishore-os>
 - **Classic portfolio** — <https://github.com/Kishore1199/kishore-portfolio>
+- **R&D:** [adding the ALPHA chatbot + speaking bot to this project](CHATBOT_RND.md)
 
 ## Contact
 
