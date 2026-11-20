@@ -27,6 +27,8 @@ npm start        # http://localhost:4200
 npm run build    # production build in dist/portfolio-3d/browser
 ```
 
+Live: <https://kishore-3d.web.app> — every push to `main` deploys automatically (GitHub Actions → Firebase Hosting).
+
 ## Related
 
 - **Kishore.OS** — portfolio as a browser OS with the ALPHA voice guide: <https://github.com/Kishore1199/kishore-os>
