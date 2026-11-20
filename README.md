@@ -1,32 +1,37 @@
-# Kishore V — Portfolio 3D
+# Kishore V — 3D Portfolio
 
-Angular 22 rebuild of the portfolio with WebGL / CSS 3D effects.
+An interactive 3D portfolio built with **Angular 22** and **three.js**.
 
-## Run
+I'm **Kishore V**, a Java Full Stack Developer (Java 21 · Spring Boot · Hibernate · Angular) from Chennai with 3+ years of experience, building the 75Health cloud EHR and EMR platforms at Kaaspro Enterprises.
+
+## Highlights
+
+- **3D hero** — three.js scene with a glowing core, orbit rings and floating tech cubes that react to the mouse.
+- **Site-wide galaxy starfield** — dense, rotating, scroll-reactive star layers that glow brighter while you scroll.
+- **Skills** — interactive 3D skill orbs with brand icons and per-category colours.
+- **Projects** — 3D carousel of product screenshots (75Health EHR & EMR, company websites, internship builds).
+- **Experience & Education** — animated timelines and cards.
+- **Study notes** — a curved 3D "chapter wall" with search and area jumps over 84 interview-prep chapters (Java full-stack + DSA guides).
+- **Contact** — EmailJS form, resume viewer, light/dark themes with distinct palettes.
+- Performance-minded: lazy three.js, transforms/opacity-only animations, single scroll reader, `prefers-reduced-motion` support.
+
+## Tech
+
+Angular 22 (standalone, signals, zoneless) · TypeScript · three.js · SCSS · EmailJS
+
+## Run locally
 
 ```bash
 npm install
-npm start          # http://localhost:4200
-npm run build      # production build -> dist/portfolio-3d/browser
+npm start        # http://localhost:4200
+npm run build    # production build in dist/portfolio-3d/browser
 ```
 
-For Netlify: build command `npm run build`, publish directory `dist/portfolio-3d/browser`.
+## Related
 
-## Where things live
+- **Kishore.OS** — portfolio as a browser OS with the ALPHA voice guide: <https://github.com/Kishore1199/kishore-os>
+- **Classic portfolio** — <https://github.com/Kishore1199/kishore-portfolio>
 
-| What | File |
-| --- | --- |
-| **All text content** (profile, skills, projects, experience, education) | `src/app/data/portfolio.data.ts` |
-| Theme colors (dark + light) | `src/styles.scss` (top of file) |
-| 3D hero scene (three.js) | `src/app/sections/hero/hero-scene.ts` |
-| 3D skills sphere | `src/app/sections/skills.ts` |
-| Skill icons (brand logos + fallbacks) | `src/app/core/skill-icon.ts`, `src/app/core/brand-icons.ts` |
-| Resume PDF, screenshots, favicon | `public/assets/` |
+## Contact
 
-## 3D / motion features
-
-- three.js hero: faceted glowing core, wireframe shell, orbit rings with satellites, particle field, mouse parallax (lazy-loaded, pauses off-screen)
-- Draggable 3D skills globe (geodesic wireframe canvas + brand icons via simple-icons, CC0); picking a category rotates it to face you
-- 3D tilt + glare on cards, CSS 3D cubes on project cards, learning-journey timeline with animated score rings for education
-- Perspective grid floor, scroll-reveal with 3D rotation, scroll progress bar
-- Respects `prefers-reduced-motion`; dark/light theme saved per visitor
+📧 kishorebe1199@gmail.com · 💼 [LinkedIn](https://www.linkedin.com/in/kishore-v-a64b2417b/) · 🐙 [GitHub](https://github.com/Kishore1199)
