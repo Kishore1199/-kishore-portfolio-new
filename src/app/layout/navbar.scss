@@ -1,0 +1,146 @@
+:host {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent-3), var(--accent), var(--violet));
+  z-index: 2;
+}
+
+.nav-wrap {
+  padding: 18px 20px 0;
+  transition: padding 0.35s ease;
+  &.scrolled { padding-top: 12px; }
+}
+
+.nav {
+  pointer-events: auto;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 62px;
+  padding: 0 10px 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, max-width 0.35s ease;
+}
+.scrolled .nav {
+  max-width: 1120px;
+  background: var(--nav-bg);
+  border-color: var(--border);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  img { border-radius: 8px; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+  &:hover img { transform: rotateY(180deg); }
+}
+.logo-dot { color: var(--accent); }
+
+.links {
+  display: flex;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  border-radius: 14px;
+  a {
+    position: relative;
+    display: block;
+    padding: 8px 13px;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: color 0.2s ease, background 0.2s ease;
+    &:hover { color: var(--text); }
+    &.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+    /* underline indicator: hidden by default, grows in when the link becomes active */
+    &::after {
+      content: '';
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 4px;
+      height: 2px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent));
+      box-shadow: 0 0 8px var(--glow);
+      transform: scaleX(0);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    &.active::after { transform: scaleX(1); }
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.resume-btn { padding: 10px 18px; font-size: 0.85rem; }
+.menu-btn { display: none; }
+
+.mobile {
+  pointer-events: auto;
+  margin: 10px auto 0;
+  max-width: 1120px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface-solid);
+  a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    color: var(--text-2);
+    text-decoration: none;
+    font-weight: 500;
+    animation: slide-in 0.35s ease both;
+    &.active { color: var(--accent); background: var(--accent-soft); }
+  }
+  .num { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-3); }
+  .btn { margin-top: 8px; }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 1023px) {
+  .links, .resume-btn { display: none; }
+  .menu-btn { display: inline-flex; }
+}
+@media (max-width: 600px) {
+  .nav-wrap { padding: 10px 12px 0; }
+}

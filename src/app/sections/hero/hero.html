@@ -1,0 +1,75 @@
+<section id="home" class="hero">
+  <!-- 3D perspective grid floor -->
+  <div class="grid-floor" aria-hidden="true"><div class="grid-plane"></div></div>
+  <div class="hero-glow" aria-hidden="true"></div>
+
+  <app-hero-scene [dark]="theme.isDark()" />
+
+  <!-- floating tech badges in front of the 3D object (desktop) -->
+  <div class="orbit-badges" aria-hidden="true">
+    <span class="badge b1"><i style="background:#ED8B00"></i>Java 21</span>
+    <span class="badge b2"><i style="background:#6DB33F"></i>Spring Boot</span>
+    <span class="badge b3"><i style="background:#DD0031"></i>Angular</span>
+    <span class="badge b4"><i style="background:#00BCD4"></i>Microservices</span>
+  </div>
+
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <div class="status">
+        <span class="status-dot"></span>
+        Available for opportunities
+      </div>
+
+      <p class="hello">Hi, I'm</p>
+      <h1 class="name">
+        <span class="name-line">{{ profile.firstName }}</span>
+        <span class="name-line name-accent">V.</span>
+      </h1>
+
+      <p class="role" aria-live="polite">
+        <span class="mono">&gt;</span> {{ typed() }}<span class="caret">_</span>
+      </p>
+
+      <p class="bio">
+        I build secure, scalable enterprise web applications with
+        <strong>Spring Boot</strong>, <strong>Angular</strong> &amp; <strong>Hibernate</strong>.
+        3+ years of experience — currently a Software Developer at
+        <strong class="accent">{{ profile.company }}</strong>, working on the 75Health cloud EHR platform.
+      </p>
+
+      <div class="ctas">
+        <a href="#projects" class="btn btn-primary">
+          View my work <app-icon name="arrow-right" [size]="16" />
+        </a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+
+      <div class="socials">
+        <a class="icon-btn" [href]="profile.github" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <app-icon name="github" />
+        </a>
+        <a class="icon-btn" [href]="profile.linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <app-icon name="linkedin" />
+        </a>
+        <a class="icon-btn" [href]="'mailto:' + profile.email" aria-label="Email">
+          <app-icon name="mail" />
+        </a>
+        <span class="divider"></span>
+        <span class="mono small">{{ profile.email }}</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      @for (s of stats; track s.label) {
+        <div class="stat glass">
+          <span class="stat-value">{{ s.value }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <a href="#about" class="scroll-cue" aria-label="Scroll to About">
+    <span class="mouse"><span class="wheel"></span></span>
+  </a>
+</section>
