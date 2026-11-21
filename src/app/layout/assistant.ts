@@ -128,9 +128,13 @@ const SUGGEST = ['Start the tour', 'Who is Kishore?', 'Tell me about the 75Healt
     .sugg { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; scrollbar-width: none; border-top: 1px solid var(--border); }
     .sugg button { flex-shrink: 0; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--border-strong); background: none; cursor: pointer; font-size: 0.74rem; color: var(--text-2); }
     .sugg button:hover { color: var(--accent); border-color: var(--accent); }
-    form { display: flex; gap: 8px; padding: 10px 12px 12px; }
-    form .field { padding: 10px 12px; font-size: 0.88rem; }
-    .mic, .send { flex-shrink: 0; width: 42px; border-radius: 12px; border: 1px solid var(--border-strong); background: var(--surface-2); cursor: pointer; display: grid; place-items: center; }
+    form { display: flex; align-items: center; gap: 8px; padding: 12px 14px 14px; }
+    form .field-in { flex: 1; min-width: 0; height: 46px; padding: 0 14px; font: inherit; font-size: 0.9rem; color: var(--text);
+      border-radius: 14px; border: 1px solid var(--border-strong); background: color-mix(in srgb, var(--surface-2) 70%, transparent); outline: 0;
+      transition: border-color 0.15s, box-shadow 0.15s; }
+    form .field-in::placeholder { color: var(--text-3); }
+    form .field-in:focus { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+    .mic, .send { flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--border-strong); background: var(--surface-2); cursor: pointer; display: grid; place-items: center; }
     .mic.on { color: #fff; background: #2dd4bf; border-color: #2dd4bf; animation: pulse 1.2s infinite; }
     .mic:disabled { opacity: 0.4; cursor: not-allowed; }
     .send { border: 0; color: #fff; background: var(--accent); }
