@@ -38,7 +38,12 @@ const SUGGEST = ['Start the tour', 'Who is Kishore?', 'Tell me about the 75Healt
             <app-icon name="mic" [size]="17" />
           </button>
           <input #inp class="field-in" placeholder="Ask about projects, skills, notes…" aria-label="Ask ALPHA" autocomplete="off" />
-          <button type="submit" class="send" aria-label="Send"><app-icon name="send" [size]="16" /></button>
+          @if (kai.thinking() || kai.voice.speaking()) {
+            <!-- while ALPHA thinks or talks: stop it (or just type a new question — that replaces the old one) -->
+            <button type="button" class="send stop" (click)="kai.cancel()" aria-label="Stop ALPHA" title="Stop"><app-icon name="stop" [size]="15" /></button>
+          } @else {
+            <button type="submit" class="send" aria-label="Send"><app-icon name="send" [size]="16" /></button>
+          }
         </form>
       </section>
     }
@@ -129,6 +134,8 @@ const SUGGEST = ['Start the tour', 'Who is Kishore?', 'Tell me about the 75Healt
     .mic.on { color: #fff; background: #2dd4bf; border-color: #2dd4bf; animation: pulse 1.2s infinite; }
     .mic:disabled { opacity: 0.4; cursor: not-allowed; }
     .send { border: 0; color: #fff; background: var(--accent); }
+    .send.stop { background: #ef4444; animation: stop-pulse 1.2s ease-in-out infinite; }
+    @keyframes stop-pulse { 50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.25); } }
     @keyframes pulse { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, #2dd4bf 25%, transparent); } }
 
     @media (max-width: 760px) {
