@@ -200,7 +200,7 @@ Reuse the Firebase setup from Kishore.OS (same project **`kishore-os`**):
 1. Copy `cloud.service.ts` + `firebase.config.ts` (Firebase web config is public by design).
 2. Add this site's domain (e.g. `kishore-new.web.app`) to the **reCAPTCHA Enterprise** key's allowed domains.
 3. App Check debug token for localhost (`firebase appcheck:debugtokens:create …`).
-4. Keep the **20 s timeout** and offline fallback — the free Gemini tier can be busy.
+4. Keep the **8 s timeout** and offline fallback — the free Gemini tier can be busy.
 
 System prompt pattern (facts generated from data, strict rules):
 ```
@@ -255,7 +255,7 @@ sequenceDiagram
 | Long speech cut off (Chrome) | 10 s `pause()/resume()` keep-alive |
 | Wake word hears ALPHA say "Alpha" | Abort recognizer before every `say()`, hold while speaking |
 | Wake word false triggers | Must be at the **start** of a sentence |
-| Gemini slow/unavailable | 20 s timeout → offline answer; robot shows "sad" only on real failure |
+| Gemini slow/unavailable | 8 s timeout → offline answer; robot shows "sad" only on real failure |
 | Robot covering content | Draggable, position remembered, snaps home near the corner |
 | Firefox (no speech recognition) | Hide mic/wake buttons; chat + spoken answers still work |
 
