@@ -384,6 +384,7 @@ export const NAV_LINKS = [
   { label: 'Experience', id: 'experience' },
   { label: 'Education', id: 'education' },
   { label: 'Prep', id: 'prep' },
+  { label: 'AI', id: 'ai' },
   { label: 'Contact', id: 'contact' },
 ];
 

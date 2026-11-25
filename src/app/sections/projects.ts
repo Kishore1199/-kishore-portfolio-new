@@ -1,21 +1,31 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
+import { AssistantBus } from '../core/assistant.bus';
+import { AssistantService } from '../core/assistant.service';
 import { Explain } from '../core/explain';
 import { Icon } from '../core/icon';
 import { RevealDirective } from '../core/reveal.directive';
 import { SkillIcon } from '../core/skill-icon';
 import { baseSkillName, skillColor } from '../core/skill-meta';
+import { prefersReducedMotion } from '../core/theme.service';
 import { PROJECTS, Project } from '../data/portfolio.data';
+
+const SLIDE_MS = 3000;
+/** how long a project that ALPHA brought up stays */
+const ALPHA_HOLD_MS = 20_000;
 
 /**
  * Projects as a 3D cover-flow: the active project faces the viewer, neighbours angle away in an arc.
  * Navigate with arrows, keyboard, swipe/drag, clicking a side card, or the numbered rail.
+ * It moves on by itself every 3 seconds, and waits while somebody is looking at it, off screen or with ALPHA.
  */
 @Component({
   selector: 'app-projects',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // on the window, so a drag that ends outside the stage still ends
+  host: { '(window:pointerup)': 'dragEnd($event)', '(window:pointercancel)': 'dragX.set(null)' },
   imports: [Explain, Icon, RevealDirective, SkillIcon],
   template: `
-    <section id="projects" class="section">
+    <section id="projects" class="section" (pointerover)="over($event)" (pointerleave)="hover.set(false)" (focusin)="focused($event)" (focusout)="focus.set(false)">
       <div class="container">
         <div class="head" appReveal>
           <div class="section-head">
@@ -23,7 +33,7 @@ import { PROJECTS, Project } from '../data/portfolio.data';
             <h2 class="title">Featured <span class="gradient-text">projects</span></h2>
             <p class="lead">Production healthcare software, company websites and full-stack internship builds.</p>
           </div>
-          <div class="counter" aria-live="polite">
+          <div class="counter" [attr.aria-live]="auto() ? 'off' : 'polite'">
             <span class="now">{{ pad(active() + 1) }}</span>
             <span class="of">/ {{ pad(projects.length) }}</span>
           </div>
@@ -31,10 +41,10 @@ import { PROJECTS, Project } from '../data/portfolio.data';
       </div>
 
       <!-- 3D stage -->
-      <div class="stage" appReveal
+      <div class="stage" appReveal #stage
            tabindex="0" role="region" aria-roledescription="carousel" aria-label="Projects"
            (keydown.arrowleft)="prev()" (keydown.arrowright)="next()"
-           (pointerdown)="dragStart($event)" (pointerup)="dragEnd($event)" (pointercancel)="dragX = null">
+           (pointerdown)="dragStart($event)">
         @for (p of projects; track p.title; let i = $index) {
           <div class="slide" [class.active]="i === active()" [style]="slideStyle(i)"
                [style.--a1]="p.accent" [style.--a2]="p.accent2"
@@ -69,7 +79,10 @@ import { PROJECTS, Project } from '../data/portfolio.data';
 
       <!-- numbered rail -->
       <div class="container">
-        <div class="rail" role="tablist" aria-label="Choose a project">
+        <div class="autobar">
+          <button type="button" (click)="toggleAuto()" [attr.aria-pressed]="auto()"><app-icon [name]="auto() ? 'pause' : 'play'" [size]="13" /> {{ auto() ? 'Pause slideshow' : 'Play slideshow' }}</button>
+        </div>
+        <div class="rail" [class.auto]="auto()" [class.hold]="!running()" role="tablist" aria-label="Choose a project">
           @for (p of projects; track p.title; let i = $index) {
             <button type="button" role="tab" class="rail-item" [class.on]="i === active()" [attr.aria-selected]="i === active()"
                     [style.--a1]="p.accent" (click)="go(i)">
@@ -81,8 +94,9 @@ import { PROJECTS, Project } from '../data/portfolio.data';
         </div>
 
         <!-- details for the active project -->
-        @for (p of [current()]; track p.title) {
-          <article class="detail glass" [style.--a1]="p.accent" [style.--a2]="p.accent2">
+        <div class="details">
+        @for (p of projects; track p.title; let i = $index) {
+          <article class="detail glass" [class.on]="i === active()" [attr.aria-hidden]="i !== active()" [style.--a1]="p.accent" [style.--a2]="p.accent2">
             <div class="d-main">
               <div class="meta">
                 <span class="chip" [class.chip-live]="p.link">{{ p.badge }}</span>
@@ -113,6 +127,7 @@ import { PROJECTS, Project } from '../data/portfolio.data';
             </aside>
           </article>
         }
+        </div>
       </div>
     </section>
   `,
@@ -190,6 +205,10 @@ import { PROJECTS, Project } from '../data/portfolio.data';
     .prev app-icon { transform: rotate(180deg); }
     .next { right: max(16px, calc(50% - 520px)); }
 
+    .autobar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+    .autobar button { display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .autobar button:hover { color: var(--accent); border-color: var(--accent); }
+
     /* ---------- rail ---------- */
     .rail { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 26px; }
     .rail-item {
@@ -203,8 +222,16 @@ import { PROJECTS, Project } from '../data/portfolio.data';
     .rail-line { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 99px; background: var(--border); overflow: hidden; }
     .rail-line::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--a1), var(--accent)); transform: scaleX(0); transform-origin: left; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
     .rail-item.on .rail-line::after { transform: scaleX(1); }
+    /* the line fills while the slide waits */
+    .rail.auto .rail-item.on .rail-line::after { transition: none; animation: rail-fill 3s linear both; }
+    .rail.auto.hold .rail-item.on .rail-line::after { animation-play-state: paused; }
+    @keyframes rail-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
     /* ---------- detail ---------- */
+    /* all the cards share one cell, so the page never jumps when the project changes */
+    .details { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .details > .detail { grid-area: 1 / 1; }
+    .details > .detail:not(.on) { visibility: hidden; animation: none; pointer-events: none; }
     .detail {
       display: grid; grid-template-columns: 1.35fr 1fr; gap: 34px; padding: 32px; border-radius: 24px; overflow: hidden;
       animation: detail-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -252,7 +279,82 @@ export class Projects {
   protected readonly projects = PROJECTS;
   protected readonly active = signal(0);
   protected readonly current = computed(() => this.projects[this.active()]);
-  protected dragX: number | null = null;
+  protected readonly dragX = signal<number | null>(null);
+
+  /** the slideshow is switched on; off from the start for people who prefer less motion */
+  protected readonly auto = signal(!prefersReducedMotion());
+  protected readonly hover = signal(false);
+  protected readonly focus = signal(false);
+  private readonly onScreen = signal(false);
+  private readonly tabHidden = signal(false);
+  private readonly held = signal(false);
+  private kai = inject(AssistantService);
+  private bus = inject(AssistantBus);
+  private stage = viewChild.required<ElementRef<HTMLElement>>('stage');
+  /** switched on and nothing is in the way */
+  protected readonly running = computed(() =>
+    this.auto() && this.onScreen() && !this.tabHidden() && !this.hover() && !this.focus() && !this.held() && this.dragX() === null
+    && !this.kai.voice.speaking() && !this.kai.chatOpen() && this.kai.tourStep() < 0 && !this.bus.lab() && !this.bus.matcher() && !this.bus.interview());
+  private left = SLIDE_MS;
+  private timer?: ReturnType<typeof setTimeout>;
+  private holdT?: ReturnType<typeof setTimeout>;
+
+  constructor() {
+    // ALPHA asked to show a project
+    const bus = this.bus;
+    effect(() => bus.front.set(this.current().title));
+    effect(() => {
+      const i = this.projects.findIndex(p => p.title === bus.project()?.title);
+      if (i >= 0) untracked(() => { this.go(i); this.hold(); });
+    });
+    // "next project", "pause the slideshow"
+    effect(() => {
+      const s = bus.slides();
+      if (s) untracked(() => { if (s.cmd === 'pause' || s.cmd === 'play') this.auto.set(s.cmd === 'play'); else { this.go(this.active() + (s.cmd === 'next' ? 1 : -1)); this.hold(); } });
+    });
+    // a new project gets the full 3 seconds; after a pause it carries on with the time that was left
+    let timed = -1;
+    effect(onCleanup => {
+      const i = this.active();
+      if (i !== timed) { timed = i; this.left = SLIDE_MS; }
+      if (!this.running()) return;
+      const started = performance.now();
+      this.timer = setTimeout(() => this.next(), this.left);
+      onCleanup(() => { clearTimeout(this.timer); this.left = Math.max(300, this.left - (performance.now() - started)); });
+    });
+    const destroy = inject(DestroyRef);
+    afterNextRender(() => {
+      const io = new IntersectionObserver(es => this.onScreen.set(es[es.length - 1].isIntersecting), { threshold: 0.4 });
+      io.observe(this.stage().nativeElement);
+      const tab = () => this.tabHidden.set(document.hidden);
+      document.addEventListener('visibilitychange', tab);
+      destroy.onDestroy(() => { io.disconnect(); document.removeEventListener('visibilitychange', tab); clearTimeout(this.timer); clearTimeout(this.holdT); });
+    });
+  }
+
+  protected toggleAuto() {
+    this.auto.update(a => !a);
+    this.left = SLIDE_MS;
+    this.held.set(false);
+  }
+
+  /** Reading or pointing at a project stops the clock, with a mouse: a finger has no hover. */
+  protected over(e: PointerEvent) {
+    if (e.pointerType === 'touch') return;
+    this.hover.set(!!(e.target as Element).closest('.slide.active, .nav, .rail, .detail'));
+  }
+
+  /** Keyboard focus stops the clock too, but not the focus a mouse click leaves behind. */
+  protected focused(e: FocusEvent) {
+    const el = e.target as Element;
+    this.focus.set(el.matches(':focus-visible') && !el.closest('.autobar'));
+  }
+
+  private hold() {
+    this.held.set(true);
+    clearTimeout(this.holdT);
+    this.holdT = setTimeout(() => this.held.set(false), ALPHA_HOLD_MS);
+  }
 
   protected go(i: number) {
     const n = this.projects.length;
@@ -262,12 +364,13 @@ export class Projects {
   protected prev() { this.go(this.active() - 1); }
 
   protected dragStart(e: PointerEvent) {
-    this.dragX = e.clientX;
+    this.dragX.set(e.clientX);
   }
   protected dragEnd(e: PointerEvent) {
-    if (this.dragX === null) return;
-    const dx = e.clientX - this.dragX;
-    this.dragX = null;
+    const from = this.dragX();
+    if (from === null) return;
+    const dx = e.clientX - from;
+    this.dragX.set(null);
     if (Math.abs(dx) > 50) dx < 0 ? this.next() : this.prev();
   }
 
