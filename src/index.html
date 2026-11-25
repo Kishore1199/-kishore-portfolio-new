@@ -9,6 +9,9 @@
   <meta name="theme-color" content="#f5f7fc" media="(prefers-color-scheme: light)">
   <base href="/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="canonical" href="https://kishore-new.web.app/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -16,6 +19,9 @@
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem('kv-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
+  <!-- structured data: npm run ai-files -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","url":"https://kishore-new.web.app","mainEntity":{"@type":"Person","name":"Kishore V","jobTitle":"Java Full Stack Developer","url":"https://kishore-new.web.app","address":{"@type":"PostalAddress","addressLocality":"Chennai","addressRegion":"Tamilnadu","addressCountry":"India"},"worksFor":{"@type":"Organization","name":"Kaaspro Enterprises"},"alumniOf":{"@type":"CollegeOrUniversity","name":"M.Kumarasamy College of Engineering"},"knowsAbout":["Java","Spring Boot","Spring","Hibernate","Spring Security","JPA","JWT","Microservices","Servlets","JSP","JDBC","REST APIs","Eureka","Spring Cloud API Gateway","Kafka","PHP","OpenEMR","FHIR R4","Angular","TypeScript","JavaScript","HTML","CSS","SCSS","SASS","Bootstrap","Ionic Framework","jQuery","Twig","MySQL","MongoDB","MariaDB","Firebase","Jenkins","GitHub","SVN","Maven","Gradle","Splunk","Docker","Google Cloud","Sentry"],"sameAs":["https://github.com/Kishore1199","https://www.linkedin.com/in/kishore-v-a64b2417b/"]}}</script>
+  <!-- /structured data -->
 </head>
 <body>
   <app-root></app-root>

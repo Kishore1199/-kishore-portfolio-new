@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// PROPOSED rules for the shared kishore-os project (Kishore.OS and this site use the same database).
+// The guestbook block is copied unchanged from portfolio-os/firestore.rules. Deploy from ONE place only:
+// deploying an older copy would remove the newer rules. See firestore/README.md.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /guestbook/{noteId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'message', 'color', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 40
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 3 && request.resource.data.message.size() <= 240
+        && request.resource.data.color in ['#fde68a', '#fbcfe8', '#bbf7d0', '#bae6fd', '#ddd6fe']
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    // Answers Kishore approved in the console. Visitors can only read approved ones.
+    match /answers/{id} {
+      allow read: if resource.data.approved == true;
+      allow write: if false;
+    }
+    // Thumbs up or down. Visitors can add one; nobody can read them from the site.
+    match /feedback/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['up', 'kind', 'question', 'answer', 'createdAt'])
+        && request.resource.data.keys().hasAll(['up', 'kind', 'question', 'answer', 'createdAt'])
+        && request.resource.data.up is bool
+        && request.resource.data.kind is string && request.resource.data.kind.size() <= 30
+        && request.resource.data.question is string && request.resource.data.question.size() <= 300
+        && request.resource.data.answer is string && request.resource.data.answer.size() <= 1000
+        && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if false;
+    }
+    // everything else is closed
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

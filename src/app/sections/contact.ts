@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, effect, inject, signal, untracked, viewChild } from '@angular/core';
+import { AssistantBus } from '../core/assistant.bus';
+import { ContactDraft } from '../core/contact-draft.service';
 import { Explain } from '../core/explain';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Icon } from '../core/icon';
@@ -45,6 +47,20 @@ type FieldName = 'name' | 'email' | 'subject' | 'message';
 
           <form class="form glass" [formGroup]="form" (ngSubmit)="submit()" appReveal [revealDelay]="120" novalidate>
             <h3>Send a message</h3>
+            <div class="draft">
+              <label class="field">
+                <span>Let ALPHA draft it <small>optional · uses Google Gemini</small></span>
+                <span class="draft-row">
+                  <input #brief type="text" maxlength="600" placeholder="e.g. Java role in Chennai, can we talk this week?" (keydown.enter)="$event.preventDefault(); write(brief.value)" />
+                  <button type="button" class="btn btn-ghost" (click)="write(brief.value)" [disabled]="drafting()">
+                    @if (drafting()) { <span class="spinner"></span> } @else { <app-icon name="spark" [size]="15" /> } Draft
+                  </button>
+                </span>
+              </label>
+              @if (drafted(); as d) {
+                <p class="drafted" role="status">{{ d }} <button type="button" (click)="undoDraft()">Undo</button></p>
+              }
+            </div>
             <div class="row">
               <label class="field">
                 <span>Name</span>
@@ -105,8 +121,15 @@ type FieldName = 'name' | 'email' | 'subject' | 'message';
     .field input::placeholder, .field textarea::placeholder { color: var(--text-3); }
     .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
     .field em { font-style: normal; font-size: 0.76rem; color: #f87171; }
+    .draft { padding: 14px; border-radius: 14px; border: 1px dashed var(--border-strong); display: grid; gap: 8px; }
+    .draft small { font-weight: 400; color: var(--text-2); margin-left: 4px; }
+    .draft-row { display: flex; gap: 8px; }
+    .draft-row input { flex: 1; min-width: 0; }
+    .draft-row .btn { flex-shrink: 0; padding: 10px 14px; font-size: 0.84rem; }
+    .drafted { font-size: 0.8rem; color: var(--text-2); }
+    .drafted button { border: 0; background: none; padding: 0; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; text-decoration: underline; }
     .send { margin-top: 6px; width: 100%; padding: 15px; }
-    .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; animation: spin 0.8s linear infinite; }
+    .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid color-mix(in srgb, currentColor 35%, transparent); border-top-color: currentColor; animation: spin 0.8s linear infinite; }
     .status { padding: 12px 14px; border-radius: 12px; font-size: 0.88rem; font-weight: 500; color: #f87171; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); }
     .status.ok { color: #34d399; background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); }
 
@@ -138,8 +161,44 @@ export class Contact {
     { icon: 'pin', label: 'Location', value: PROFILE.location, href: null, external: false },
   ];
 
+  private writer = inject(ContactDraft);
+  private briefBox = viewChild<ElementRef<HTMLInputElement>>('brief');
+  protected readonly drafting = signal(false);
+  /** note under the draft box; empty when nothing was drafted */
+  protected readonly drafted = signal('');
+  private beforeDraft: { subject: string; message: string } | null = null;
+  private draftAbort?: AbortController;
+
   constructor() {
     this.form.events.subscribe(() => this.touchedTick.update(n => n + 1));
+    inject(DestroyRef).onDestroy(() => this.draftAbort?.abort());
+    const bus = inject(AssistantBus);
+    // ALPHA drafted something in the chat
+    effect(() => { const d = bus.draft(); if (d) untracked(() => this.useDraft(d.subject, d.message, 'Drafted by ALPHA. Please check it, then press Send.')); });
+    effect(() => { if (bus.draftStart()) untracked(() => this.briefBox()?.nativeElement.focus({ preventScroll: true })); });
+  }
+
+  /** Draft only: sending always needs the visitor to press Send. */
+  protected async write(brief: string) {
+    if (this.drafting()) return;
+    if (brief.trim().length < 8) { this.briefBox()?.nativeElement.focus(); return; }
+    this.drafting.set(true);
+    const ctrl = this.draftAbort = new AbortController();
+    const d = await this.writer.write(brief, ctrl.signal);
+    this.drafting.set(false);
+    if (!ctrl.signal.aborted) this.useDraft(d.subject, d.message, d.ai ? 'Drafted by AI. Please check it, then press Send.' : "AI wasn't available, so this is a simple template. Please check it, then press Send.");
+  }
+
+  private useDraft(subject: string, message: string, note: string) {
+    if (!this.drafted()) { const { subject: s, message: m } = this.form.getRawValue(); this.beforeDraft = { subject: s, message: m }; }
+    this.form.patchValue({ subject, message });
+    this.drafted.set(note);
+  }
+
+  protected undoDraft() {
+    if (this.beforeDraft) this.form.patchValue(this.beforeDraft);
+    this.beforeDraft = null;
+    this.drafted.set('');
   }
 
   protected error(field: FieldName): string {
@@ -171,6 +230,8 @@ export class Contact {
       );
       this.showStatus(true, "Thanks! Your message was sent — I'll reply soon.");
       this.form.reset();
+      this.drafted.set('');
+      this.beforeDraft = null;
     } catch {
       this.showStatus(false, 'Sorry, the message could not be sent. Please email me directly.');
     } finally {

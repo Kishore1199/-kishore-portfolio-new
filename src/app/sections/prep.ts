@@ -6,10 +6,12 @@ import {
   ElementRef,
   OnDestroy,
   computed,
+  inject,
   signal,
   viewChild,
   viewChildren,
 } from '@angular/core';
+import { AssistantBus } from '../core/assistant.bus';
 import { Icon } from '../core/icon';
 import { RevealDirective } from '../core/reveal.directive';
 import { prefersReducedMotion } from '../core/theme.service';
@@ -71,6 +73,7 @@ interface AreaMark {
                 <app-icon [name]="g.icon" [size]="14" /> {{ g.short }}
               </button>
             }
+            <button type="button" class="g" style="--c: var(--accent)" (click)="bus.openInterview()"><app-icon name="mic" [size]="14" /> Mock interview</button>
           </div>
         </div>
 
@@ -212,6 +215,7 @@ interface AreaMark {
   `,
 })
 export class Prep implements AfterViewInit, OnDestroy {
+  protected readonly bus = inject(AssistantBus);
   protected readonly guides = STUDY_GUIDES;
   protected readonly gap = 14;
 

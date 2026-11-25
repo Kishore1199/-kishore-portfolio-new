@@ -15,6 +15,10 @@ I'm **Kishore V**, a Java Full Stack Developer (Java 21 · Spring Boot · Hibern
 - **Contact** — EmailJS form, resume viewer, light/dark themes with distinct palettes.
 - Performance-minded: lazy three.js, transforms/opacity-only animations, single scroll reader, `prefers-reduced-motion` support.
 
+## AI
+
+66 free AI options, from a job matcher to an agent team. How each one works and why: [AI_FEATURES.md](AI_FEATURES.md).
+
 ## Tech
 
 Angular 22 (standalone, signals, zoneless) · TypeScript · three.js · SCSS · EmailJS
