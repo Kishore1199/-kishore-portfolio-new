@@ -10,6 +10,7 @@ import { Projects } from './sections/projects';
 import { Experience } from './sections/experience';
 import { Education } from './sections/education';
 import { Contact } from './sections/contact';
+import { Card } from './sections/card';
 import { Prep } from './sections/prep';
 import { AiSection } from './sections/ai';
 import { Assistant } from './layout/assistant';
@@ -17,7 +18,7 @@ import { Assistant } from './layout/assistant';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Navbar, Footer, ResumeModal, Starfield, Hero, About, Skills, Projects, Experience, Education, Prep, AiSection, Contact, Assistant],
+  imports: [Navbar, Footer, ResumeModal, Starfield, Hero, About, Skills, Projects, Experience, Education, Prep, AiSection, Contact, Card, Assistant],
   template: `
     <div class="ambient" aria-hidden="true"></div>
     <app-starfield />
@@ -35,6 +36,7 @@ import { Assistant } from './layout/assistant';
       <app-prep />
       <app-ai />
       <app-contact />
+      @defer (on viewport) { <app-card /> } @placeholder { <div style="min-height: 640px"></div> }
     </main>
 
     <app-footer />

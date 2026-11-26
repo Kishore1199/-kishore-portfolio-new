@@ -194,7 +194,7 @@ In the tables below, **AI** is the number of Gemini requests for one use.
 | **Proactive guide** | Offers help after 18 seconds on a section | At most 3 offers; stops after 2 dismissals |
 | **On-device AI** | A fallback when Gemini is resting | Chrome's built-in model, only if the visitor switches it on |
 | **Select and ask** | Ask about any text on the page | A button appears on selection |
-| **Tamil and Hindi** | Replies in the visitor's language | An instruction to Gemini; short ready-made texts without it |
+| **Tamil, Hindi, Telugu and Malayalam** | Replies in the visitor's language | An instruction to Gemini; short ready-made texts without it |
 | **Feedback buttons** | Shows which answers help | Saved on the device, or in Firestore if switched on |
 | **AI-friendly site** | Helps search engines and AI tools read the profile | `llms.txt` and structured data, without phone or email |
 | **WebMCP tools** | Lets a visitor's own AI agent use 7 of these tools | A Chrome origin trial; needs a token |

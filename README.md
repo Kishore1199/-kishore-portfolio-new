@@ -11,7 +11,7 @@ I'm **Kishore V**, a Java Full Stack Developer (Java 21 · Spring Boot · Hibern
 - **Skills** — interactive 3D skill orbs with brand icons and per-category colours.
 - **Projects** — 3D carousel of product screenshots (75Health EHR & EMR, company websites, internship builds).
 - **Experience & Education** — animated timelines and cards.
-- **Study notes** — a curved 3D "chapter wall" with search and area jumps over 84 interview-prep chapters (Java full-stack + DSA guides).
+- **Study notes** — a curved 3D "chapter wall" with search and area jumps over 87 interview-prep chapters (Java full-stack + DSA guides).
 - **Contact** — EmailJS form, resume viewer, light/dark themes with distinct palettes.
 - Performance-minded: lazy three.js, transforms/opacity-only animations, single scroll reader, `prefers-reduced-motion` support.
 
